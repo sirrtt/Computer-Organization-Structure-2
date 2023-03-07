@@ -1,0 +1,130 @@
+.data								#khai bao du lieu sau dong .data
+	thongbao1: .asciiz "Nhap so nguyen thu nhat: "		#khai bao va gan gia tri cho chuoi thongbao1 la "Nhap so nguyen thu nhat: "
+	thongbao2: .asciiz "Nhap so nguyen thu hai: "		#khai bao va gan gia tri cho chuoi thongbao2 la "Nhap so nguyen thu hai: "
+	thongbao3: .asciiz "So lon hon trong 2 so la: "		#khai bao va gan gia tri cho chuoi thongbao3 la "So lon hon trong 2 so la: "
+	thongbao4: .asciiz "\nTong: "				#khai bao va gan gia tri cho chuoi thongbao4 la "\nTong: "
+	thongbao5: .asciiz "\nHieu: "				#khai bao va gan gia tri cho chuoi thongbao5 la "\nHieu: "
+	thongbao6: .asciiz "\nTich: "				#khai bao va gan gia tri cho chuoi thongbao6 la "\nTich: "
+	thongbao7: .asciiz "\nThuong: "				#khai bao va gan gia tri cho chuoi thongbao7 la "\nThuong: "
+	a: .word				#khai bao so nguyen a
+	b: .word				#khai bao so nguyen b
+	c: .word				#khai bao so nguyen c
+.text						#viet chuong trinh sau dong .text
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao1			#$a0=dia chi cua chuoi thongbao1
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 5				#lenh goi he thong doc so nguyen
+	la $a1, a				#$a1=dia chi cua a
+	syscall					#lenh goi he thong thuc thi
+	move $a1, $v0				#dich chuyen noi dung cua $v0 vao $a1 ($a1=$v0)
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao2			#$a0=dia chi cua chuoi thongbao2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 5				#lenh goi he thong doc so nguyen
+	la $a2, b				#$a2=dia chi cua b
+	syscall					#lenh goi he thong thuc thi
+	move $a2, $v0				#dich chuyen noi dung cua $v0 vao $a2 ($a2=$v0)
+	
+	bgt $a1, $a2, solon1 			#goi lenh so sanh >, neu $a1>$a2 thi nhay sang label solon1 con khong thi chay dong lenh ke tiep
+    	blt $a1, $a2, solon2 			#goi lenh so sanh <, neu $a1>$a2 thi nhay sang label solon2 con khong thi chay dong lenh ke tiep
+    	
+solon1: li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao3			#$a0=dia chi cua chuoi thongbao3
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+        la $a0, ($a1)				#$a0=dia chi cua $a1 
+        syscall					#lenh goi he thong thuc thi
+        
+        li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao4			#$a0=dia chi cua chuoi thongbao4
+	syscall					#lenh goi he thong thuc thi
+        
+        li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	add $a0, $a1, $a2			#$a0=$a1+$a2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao5			#$a0=dia chi cua chuoi thongbao5
+	syscall					#lenh goi he thong thuc thi
+		
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	sub $a0, $a1, $a2			#$a0=$a1-$a2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao6			#$a0=dia chi cua chuoi thongbao6
+	syscall					#lenh goi he thong thuc thi
+
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	mult $a1, $a2				#$lo=$a1*$a2
+	mflo $a0				#$a0=$lo
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao7			#$a0=dia chi cua chuoi thongbao7
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	div $a1, $a2				#$lo=$a1/$a2, so du ghi vao $hi
+	mflo $a0				#$a0=$lo
+	syscall					#lenh goi he thong thuc thi
+        j Exit					#nhay den label Exit
+        
+solon2: li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao3			#$a0=dia chi cua chuoi thongbao3
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+        la $a0, ($a2)				#$a0=dia chi cua $a2
+        syscall					#lenh goi he thong thuc thi
+        
+        li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao4			#$a0=dia chi cua chuoi thongbao4
+	syscall					#lenh goi he thong thuc thi
+        	
+        li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	add $a0, $a1, $a2			#$a0=$a1+$a2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao5			#$a0=dia chi cua chuoi thongbao5
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	sub $a0, $a1, $a2			#$a0=$a1-$a2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao6			#$a0=dia chi cua chuoi thongbao6
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	mult $a1, $a2				#$lo=$a1*$a2
+	mflo $a0				#$a0=$lo
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao7			#$a0=dia chi cua chuoi thongbao7
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, c				#$a0=dia chi cua c
+	div $a1, $a2				#$lo=$a1/$a2, so du ghi vao $hi
+	mflo $a0				#$a0=$lo
+	syscall					#lenh goi he thong thuc thi
+        j Exit					#nhay den label Exit
+
+Exit:   li $v0, 10 				#lenh goi he thong thoat
+        syscall					#lenh goi he thong thuc thi
+	

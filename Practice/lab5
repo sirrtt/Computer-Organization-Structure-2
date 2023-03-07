@@ -1,0 +1,103 @@
+.data								#khai bao du lieu sau dong .data
+	thongbao1: .asciiz "Nhap so phan tu cua mang: "		#khai bao va gan gia tri cho chuoi thongbao1 la "Nhap so phan tu cua mang: "
+	thongbao2: .asciiz "\nGia tri lon nhat: "		#khai bao va gan gia tri cho chuoi thongbao2 la "\nGia tri lon nhat: "
+	thongbao3: .asciiz "\nGia tri nho nhat: "		#khai bao va gan gia tri cho chuoi thongbao3 la "\nGia tri nho nhat: "
+	thongbao4: .asciiz "\nTong cac phan tu cua mang: "	#khai bao va gan gia tri cho chuoi thongbao4 la "\nTong cac phan tu cua mang: "
+	thongbao5: .asciiz "\nGia tri phan tu la: "		#khai bao va gan gia tri cho chuoi thongbao5 la "\nGia tri phan tu la: "
+	thongbao6: .asciiz "\nNhap chi so: "			#khai bao va gan gia tri cho chuoi thongbao6 la "\nNhap chi so: "
+	n: .word				#khai bao so nguyen n
+.text						#viet chuong trinh sau dong .text
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao1			#$a0=dia chi cua chuoi thongbao1
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 5				#lenh goi he thong doc so nguyen
+	la $a1, n				#$a1=dia chi cua n
+	syscall					#lenh goi he thong thuc thi
+	move $a1, $v0				#dich chuyen noi dung cua $v0 vao $a1 ($a1=$v0)
+	
+	li $s1, 0				#$s1=0 (dung de chua tong cac phan tu)
+	li $t9, 1				#$t9=1
+	li $t8, 1				#$t8=1
+	
+	add $t0, $zero, $a0			#$t0=0+$a0 (voi $a0 la dia chi cua mang)
+	sll $t1, $a1, 2				#$t1=$a1 sau khi dich trai 2 bit (voi $a1 la dia chi phan tu cuoi cua mang)
+	add $t2, $a0, $t1			#$t2=$a0+$t1 ($t2 la dia chi thuc cua phan tu cuoi cua mang)
+Loop: 	
+	li $v0, 5				#lenh goi he thong doc so nguyen
+   	syscall					#lenh goi he thong thuc thi
+   	add $s1, $s1, $v0			#$s1=$s1+$v0
+   	sw $v0, 0($t0) 				#0($t0)=$v0 gia tri cua $v0 duoc luu vao 0($t0)
+
+   	move $s6, $v0				#dich chuyen noi dung cua $v0 vao $s6 ($s6=$v0) (voi $s6 la trung gian cua max)
+   	bnez $t9, gan				#goi lenh so sanh !=0, neu $t9!=0 thi nhay sang label gan con khong thi chay dong lenh ke tiep
+   	blt $s2, $v0, gan 			#goi lenh so sanh <, neu $s2<$v0 thi nhay sang label gan con khong thi chay dong lenh ke tiep (voi $s2 dung de luu phan tu lon nhat mang)
+   	
+   	Next:		
+   	move $s5, $v0				#dich chuyen noi dung cua $v0 vao $s5 ($s5=$v0)	(voi $s5 la trung gian cua min)
+   	bnez $t8, gan2				#goi lenh so sanh !=0, neu $t8!=0 thi nhay sang label gan2 con khong thi chay dong lenh ke tiep
+   	bgt $s3, $v0, gan2			#goi lenh so sanh >, neu $s3>$v0 thi nhay sang label gan2 con khong thi chay dong lenh ke tiep	(voi $s3 dung de luu phan tu lon nhat mang)
+   	
+   	Next2:
+   	addi $t0, $t0, 4			#$t0=$t0+4
+   	slt $t3, $t0, $t2   			#goi lenh so sanh <, neu $t0<$t2 thi $t3=1 con khong thi $t3=0
+   	bnez $t3, Loop 				#goi lenh so sanh !=0, neu $t3!=0 thi nhay sang label Loop con khong thi chay dong lenh ke tiep
+   	j Xuat					#nhay den label Xuat
+   	
+Xuat:
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao2			#$a0=dia chi cua chuoi thongbao2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, ($s2)				#$a0=dia chi cua $s2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao3			#$a0=dia chi cua chuoi thongbao3
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, ($s3)				#$a0=dia chi cua $s3
+	syscall					#lenh goi he thong thuc thi
+
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao4			#$a0=dia chi cua chuoi thongbao4
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	la $a0, ($s1)				#$a0=dia chi cua $s1
+	syscall					#lenh goi he thong thuc thi
+	
+	do:
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao6			#$a0=dia chi cua chuoi thongbao6
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 5				#lenh goi he thong doc so nguyen
+	syscall					#lenh goi he thong thuc thi
+	
+	blt $v0, $zero, do    			#goi lenh so sanh <, neu $v0<$zero thi nhay sang label do con khong thi chay dong lenh ke tiep
+	blt $a1, $v0, do			#goi lenh so sanh <, neu $a1<$v0 thi nhay sang label do con khong thi chay dong lenh ke tiep
+	
+	la $a0, thongbao1			#$a0=dia chi cua chuoi thongbao1
+	sll $v0, $v0, 2				#$v0=$v0 sau khi dich trai 2 bit
+	add $v0, $a0, $v0			#$v0=$a0+$v0
+	lw $a0, 0($v0)				#$a0=0($v0) gia tri cua 0($v0) duoc luu vao $a0
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	syscall					#lenh goi he thong thuc thi
+	j Exit					#nhay den label Exit
+	
+gan:
+	li $t9, 0				#$t9=0
+	move $s2, $s6				#dich chuyen noi dung cua $s6 vao $s2 ($s2=$s6)
+	j Next					#nhay den label Next
+	
+gan2: 
+	li $t8, 0				#$t9=0
+	move $s3, $s5				#dich chuyen noi dung cua $s5 vao $s3 ($s3=$s5)
+	j Next2					#nhay den label Next2
+	
+Exit:
+	li $v0, 10 				#lenh goi he thong thoat
+        syscall					#lenh goi he thong thuc thi

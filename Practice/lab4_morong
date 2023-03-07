@@ -1,0 +1,89 @@
+.data							#Chi dan khai bao du lieu sau dong nay
+	nhap: .space 100				#cung cap 100 bytes cho nhap
+  	khong: .asciiz "Zero"				#khai bao va gan gia tri cho chuoi khong la "Zero"
+   	mot: .asciiz "One"				#khai bao va gan gia tri cho chuoi mot la "One"
+  	hai: .asciiz "Two"				#khai bao va gan gia tri cho chuoi hai la "Two"
+  	ba: .asciiz "Three"				#khai bao va gan gia tri cho chuoi ba la "Three"
+  	bon: .asciiz "Four"				#khai bao va gan gia tri cho chuoi bon la "Four"
+  	nam: .asciiz "Five"				#khai bao va gan gia tri cho chuoi nam la "Five"
+  	sau: .asciiz "Six"				#khai bao va gan gia tri cho chuoi sau la "Six"
+  	bay: .asciiz "Seven"				#khai bao va gan gia tri cho chuoi bay la "Seven"
+  	tam: .asciiz "Eight"				#khai bao va gan gia tri cho chuoi tam la "Eight"
+  	chin: .asciiz "Nine"				#khai bao va gan gia tri cho chuoi chin la "Nine"
+  	thongbao1: .asciiz "\nNhap chuoi so: "		#khai bao va gan gia tri cho chuoi thongbao1 la "\nNhap chuoi so: "
+  	cach: .asciiz " "				#khai bao va gan gia tri cho chuoi cach la " "
+.text
+  	li $v0, 4				#lenh goi he thong xuat chuoi
+  	la $a0, thongbao1			#$a0=dia chi cua chuoi thongbao1
+  	syscall					#lenh goi he thong thuc thi
+  
+  	li $v0, 8				#lenh goi he thong doc chuoi
+  	la $a0, nhap				#$a0=dia chi cua mang nhap
+  	li $a1, 100				#$a1=100
+  	syscall					#lenh goi he thong thuc thi
+  
+  	la $s0, nhap				#$s0=dia chi cua mang nhap, dia chi cua phan tu dau
+  	li $t0, 0				#$t0=0
+Loop:
+  	add $t1, $s0, $t0			#$t1=$s0+$t0
+  	lb $t2, 0($t1)				#$t2=0+$t1
+  	beq $t2, $zero, Exit  			#goi lenh so sanh =, neu $t2=0 thi nhay sang label Exit con khong thi chay dong lenh ke tiep
+  	sub $t3, $t2, 48			#$t3=$t2-48
+ 	beq $t3, 0, Khong			#goi lenh so sanh =, neu $t3=0 thi nhay sang label Khong con khong thi chay dong lenh ke tiep
+  	beq $t3, 1, Mot				#goi lenh so sanh =, neu $t3=1 thi nhay sang label Mot con khong thi chay dong lenh ke tiep
+  	beq $t3, 2, Hai				#goi lenh so sanh =, neu $t3=2 thi nhay sang label Hai con khong thi chay dong lenh ke tiep
+  	beq $t3, 3, Ba				#goi lenh so sanh =, neu $t3=3 thi nhay sang label Ba con khong thi chay dong lenh ke tiep
+  	beq $t3, 4, Bon				#goi lenh so sanh =, neu $t3=4 thi nhay sang label Bon con khong thi chay dong lenh ke tiep
+  	beq $t3, 5, Nam				#goi lenh so sanh =, neu $t3=5 thi nhay sang label Nam con khong thi chay dong lenh ke tiep
+  	beq $t3, 6, Sau				#goi lenh so sanh =, neu $t3=6 thi nhay sang label Sau con khong thi chay dong lenh ke tiep
+  	beq $t3, 7, Bay				#goi lenh so sanh =, neu $t3=7 thi nhay sang label Bay con khong thi chay dong lenh ke tiep
+  	beq $t3, 8, Tam				#goi lenh so sanh =, neu $t3=8 thi nhay sang label Tam con khong thi chay dong lenh ke tiep
+  	beq $t3, 9, Chin			#goi lenh so sanh =, neu $t3=9 thi nhay sang label Chin con khong thi chay dong lenh ke tiep
+  	
+Hientai:
+  	add $t0, $t0, 1				#$t0=$t0+1
+  	j Loop					#nhay den label Loop
+  
+In:
+  	li $v0, 4				#lenh goi he thong xuat chuoi
+  	move $a0, $s1				#$a0=$s1
+  	syscall					#lenh goi he thong thuc thi
+  	li $v0, 4				#lenh goi he thong xuat chuoi
+  	la $a0, cach				#$a0=dia chi cua chuoi cach
+  	syscall					#lenh goi he thong thuc thi
+  	j Hientai				#nhay den label Hientai
+  
+Khong:	
+  	la $s1, khong				#$s1=dia chi cua chuoi khong
+  	j In					#nhay den label In
+Mot:
+  	la $s1, mot				#$s1=dia chi cua chuoi mot
+  	j In					#nhay den label In
+Hai:
+  	la $s1, hai				#$s1=dia chi cua chuoi hai
+  	j In					#nhay den label In
+Ba:
+  	la $s1, ba				#$s1=dia chi cua chuoi ba
+  	j In					#nhay den label In
+Bon:
+  	la $s1, bon				#$s1=dia chi cua chuoi bon
+  	j In					#nhay den label In
+Nam:
+  	la $s1, nam				#$s1=dia chi cua chuoi nam
+  	j In					#nhay den label In
+Sau:
+  	la $s1, sau				#$s1=dia chi cua chuoi sau
+  	j In					#nhay den label In
+Bay:
+  	la $s1, bay				#$s1=dia chi cua chuoi bay
+  	j In					#nhay den label In
+Tam:
+  	la $s1, tam				#$s1=dia chi cua chuoi tam
+  	j In					#nhay den label In
+Chin:
+  	la $s1, chin				#$s1=dia chi cua chuoi chin
+  	j In					#nhay den label In
+  
+Exit:
+	li $v0, 10				#lenh goi he thong thoat
+	syscall 				#lenh goi he thong thuc thi

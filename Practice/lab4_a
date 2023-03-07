@@ -1,0 +1,72 @@
+.data								#Chi dan khai bao du lieu sau dong nay
+	thongbao1: .asciiz "Nhap ky tu (chi 1 ky tu): "		#khai bao va gan gia tri cho chuoi thongbao1 la "Nhap ky tu (chi 1 ky tu): "
+	thongbao2: .asciiz "\nKy tu truoc: "			#khai bao va gan gia tri cho chuoi thongbao2 la "\nKy tu truoc: "
+	thongbao3: .asciiz "\nKy tu sau: "			#khai bao va gan gia tri cho chuoi thongbao3 la "\nKy tu sau: "
+	thongbao4: .asciiz "\nInvalid type"			#khai bao va gan gia tri cho chuoi thongbao4 la	"\nInvalid type"
+	thongbao5: .asciiz "\nLa so"				#khai bao va gan gia tri cho chuoi thongbao5 la	"\nLa so"
+	thongbao6: .asciiz "\nLa chu hoa"			#khai bao va gan gia tri cho chuoi thongbao6 la	"\nLa chu hoa"
+	thongbao7: .asciiz "\nLa chu thuong"			#khai bao va gan gia tri cho chuoi thongbao7 la	"\nLa chu thuong"
+.text							#nhap noi dung chuong trình sau dong nay
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao1			#$a0=dia chi cua chuoi thongbao1
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 12				#lenh goi he thong doc ki tu
+	syscall					#lenh goi he thong thuc thi
+	
+	addiu $t2, $v0, 0			#$t2=$v0
+	subiu $t0, $v0, 1			#$t0=$v0+1
+	addiu $t1, $v0, 1			#$t1=$v0+1
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao2			#$a0=dia chi cua chuoi thongbao2
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 11				#lenh goi he thong in ki tu
+	la $a0, ($t0)				#$a0=dia chi cua ki tu $t0
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, thongbao3			#$a0=dia chi cua chuoi thongbao3
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 11				#lenh goi he thong in ki tu
+	la $a0, ($t1)				#$a0=dia chi cua ki tu $t1
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	bgt $t2, 122, loi			#goi lenh so sanh >, neu $t2>122 thi nhay sang label loi con khong thi chay dong lenh ke tiep
+	bge $t2, 97, chuthuong			#goi lenh so sanh >=, neu $t2>=97 thi nhay sang label chuthuong con khong thi chay dong lenh ke tiep
+	blt $t2, 97, xetlai			#goi lenh so sanh <, neu $t2<97 thi nhay sang label xetlai con khong thi chay dong lenh ke tiep
+	li $v0, 10				#lenh goi he thong thoat
+	syscall					#lenh goi he thong thuc thi
+	
+
+chuthuong: la $a0, thongbao7			#$a0=dia chi cua chuoi thongbao7
+	   syscall				#lenh goi he thong thuc thi
+	   li $v0, 10				#lenh goi he thong thoat
+       	   syscall				#lenh goi he thong thuc thi
+       	   
+chuhoa:	   la $a0, thongbao6			#$a0=dia chi cua chuoi thongbao6
+	   syscall				#lenh goi he thong thuc thi
+	   li $v0, 10				#lenh goi he thong thoat
+       	   syscall				#lenh goi he thong thuc thi
+       	   
+so: 	   la $a0, thongbao5			#$a0=dia chi cua chuoi thongbao5
+	   syscall				#lenh goi he thong thuc thi
+	   li $v0, 10				#lenh goi he thong thoat
+	   syscall				#lenh goi he thong thuc thi
+	   
+xetlai:	   ble $t2, 90, xetlai2			#goi lenh so sanh <=, neu $t2<=90 thi nhay sang label xetlai2 con khong thi chay dong lenh ke tiep
+	   j loi				#nhay den label loi
+
+xetlai2:   bge $t2, 65, chuhoa			#goi lenh so sanh >=, neu $t2>=65 thi nhay sang label chuhoa con khong thi chay dong lenh ke tiep
+	   ble $t2, 57, xetlai			#goi lenh so sanh <=, neu $t2<=57 thi nhay sang xetlai loi con khong thi chay dong lenh ke tiep
+	   j loi				#nhay den label loi
+
+xetlai3:   bge $t2, 48, so			#goi lenh so sanh >=, neu $t2>=48 thi nhay sang label so con khong thi chay dong lenh ke tiep
+	   j loi				#nhay den label loi
+   
+loi:	   la $a0, thongbao4			#$a0=dia chi cua chuoi thongbao4
+	   syscall				#lenh goi he thong thuc thi
+	   li $v0, 10				#lenh goi he thong thoat
+	   syscall				#lenh goi he thong thuc thi

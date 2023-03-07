@@ -1,0 +1,62 @@
+.data										#khai bao du lieu sau dong .data
+	array1: .word 5, 6, 7, 8, 1, 2, 3, 9, 10, 4				
+	size1: .word 10
+	
+	array2: .byte 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+	size2: .word 16
+	
+	array3: .space 8
+	size3: .word 8
+	
+	cach: .asciiz " "						#khai bao va gan gia tri cho chuoi cach la " "
+	xuongdong: .asciiz "\n"						#khai bao va gan gia tri cho xuongdong cach la "\n"
+	thongbao1: .asciiz "Nhap mang can xuat phan tu: "		#khai bao va gan gia tri cho thongbao1 cach la "Nhap mang can xuat phan tu: "
+.text
+	la $t0, array1				#$t0=dia chi cua mang array1
+	lw $t1, size1				#$t1=size1
+	sll $t1, $t1, 2				#$t1=$t1 sau khi dich trai 2 bit (voi $t1 la dia chi phan tu cuoi cua mang)
+	add $t1, $t0, $t1			#$t1=$t0+$t1 ($t1 la dia chi thuc cua phan tu cuoi cua mang)
+Loop1:
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	lw $a0, 0($t0) 				#lenh goi luu 0+$t0 vao $a0 
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, cach				#$a0=dia chi cua chuoi cach 
+	syscall					#lenh goi he thong thuc thi
+	addi $t0, $t0, 4			#$t0=$t0+4
+	
+	slt $t3, $t0, $t1			#goi lenh so sanh <, neu $t0<$t1 thi $t3=1 con khong thi $t3=0
+	bne $t3, $zero, Loop1    		#goi lenh so sanh !=, neu $t3!=$tzero thi nhay sang label Loop1 con khong thi chay dong lenh ke tiep
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, xuongdong			#$a0=dia chi cua chuoi xuongdong
+	syscall					#lenh goi he thong thuc thi
+	
+	la $t0, array2				#$t0=dia chi cua mang array2
+	lw $t1, size2				#$t1=size2
+	add $t1, $t0, $t1			#$t1=$t0+$t1 ($t1 la dia chi thuc cua phan tu cuoi cua mang)
+Loop2:
+	li $v0, 1				#lenh goi he thong xuat so nguyen
+	lb $a0, 0($t0)				#lenh goi luu 0+$t0 vao $a0
+	syscall					#lenh goi he thong thuc thi
+	
+	li $v0, 4				#lenh goi he thong xuat chuoi
+	la $a0, cach				#$a0=dia chi cua chuoi cach 
+	syscall					#lenh goi he thong thuc thi
+	addi $t0, $t0, 1			#$t0=$t0+1
+	
+	slt $t3, $t0, $t1			#goi lenh so sanh <, neu $t0<$t1 thi $t3=1 con khong thi $t3=0
+	bne $t3, $zero, Loop2        		#goi lenh so sanh !=, neu $t3!=$tzero thi nhay sang label Loop2 con khong thi chay dong lenh ke tiep
+
+	li, $v0, 4			#lenh goi he thong xuat chuoi
+	la, $a0, xuongdong		#$a0=dia chi cua chuoi xuongdong
+	syscall				#lenh goi he thong thuc thi
+
+	la $a2, array2    		#$a2=dia chi mang array2
+	la $a3, array3      		#$a3=dia chi mang array3
+	lw $s2, size2       		#$s2=size2
+	lw $s3, size3       		#$s3=size3
+	add $t0, $a2, $0   		#con tro $t0 chi toi array2[0]
+	add $t1, $a2, $s2   		#con tro $t1 chi toi array2[size2]
+	add $t3, $a3, $0     		#con tro $t3 chi toi array3[0]

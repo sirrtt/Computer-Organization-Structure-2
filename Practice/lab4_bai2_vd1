@@ -1,0 +1,6 @@
+bne $s0, $s1, else
+add $s2, $t0, $t1
+j exit
+else: sub $s2, $t0, $t1
+exit:
+
